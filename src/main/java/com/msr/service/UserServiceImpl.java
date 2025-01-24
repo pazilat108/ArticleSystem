@@ -3,8 +3,11 @@ package com.msr.service;
 import com.msr.mapper.UserMapper;
 import com.msr.pojo.User;
 import com.msr.utils.Md5Util;
+import com.msr.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @author acer
@@ -26,5 +29,23 @@ public class UserServiceImpl implements UserService{
         //对密码进行MD5加密
         String md5password =Md5Util.getMD5String(password);
         userMapper.register(username,md5password);
+    }
+
+    //修改用户的基本信息
+    @Override
+    public void update(User user) {
+        //获取登录者的用户id
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        Integer id = Integer.parseInt(claims.get("id").toString());
+        user.setId(id);
+        userMapper.update(user);
+    }
+    //修改头像
+    @Override
+    public void updateAvatar(String avatarUrl) {
+        //获取登录者的用户id
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        Integer id = Integer.parseInt(claims.get("id").toString());
+        userMapper.updateAvatar(avatarUrl,id);
     }
 }

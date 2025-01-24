@@ -8,10 +8,7 @@ import com.msr.utils.Md5Util;
 import com.msr.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Pattern;
 import java.util.HashMap;
@@ -66,15 +63,28 @@ public class UserController {
         //密码不正确，登录失败
         return Result.error("密码不正确!");
     }
-    //查看用户详情
-    @GetMapping("/userInfo")
-    public Result userInfo(){
-        //获取ThreadLocalUtil的map对象
-        Map<String, Object> claims = (Map<String, Object>) ThreadLocalUtil.get();
-        String username = claims.get("username").toString();
-        //根据用户名获取用户对象
-        User user = userService.findByUsername(username);
-        return Result.success(user);
+     //查看用户详情
+     @GetMapping("/userInfo")
+     public Result userInfo(){
+         //获取ThreadLocalUtil的map对象
+         Map<String, Object> claims = (Map<String, Object>) ThreadLocalUtil.get();
+         String username = claims.get("username").toString();
+         //根据用户名获取用户对象
+         User user = userService.findByUsername(username);
+         return Result.success(user);
+    }
 
+    //修改用户
+    @PutMapping("/update")
+    public Result update(@RequestBody User user) {
+        userService.update(user);
+        return Result.success();
+    }
+    //修改头像
+    @PatchMapping("/updateAvatar")
+    public Result updateAvatar(@RequestParam String avatarUrl){
+        userService.updateAvatar(avatarUrl);
+        return Result.success();
     }
 }
+

@@ -7,4 +7,8 @@ public interface UserService {
     User findByUsername(String username);
     //用户注册
     void register(String username, String password);
+    //修改用户
+    void update(User user);
+    //修改头像
+    void updateAvatar(String avatarUrl);
 }
