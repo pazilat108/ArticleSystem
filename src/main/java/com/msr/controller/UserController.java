@@ -7,6 +7,7 @@ import com.msr.utils.JwtUtil;
 import com.msr.utils.Md5Util;
 import com.msr.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,7 @@ public class UserController {
         //密码不正确，登录失败
         return Result.error("密码不正确!");
     }
+
      //查看用户详情
      @GetMapping("/userInfo")
      public Result userInfo(){
@@ -80,10 +82,38 @@ public class UserController {
         userService.update(user);
         return Result.success();
     }
+
     //修改头像
     @PatchMapping("/updateAvatar")
     public Result updateAvatar(@RequestParam String avatarUrl){
         userService.updateAvatar(avatarUrl);
+        return Result.success();
+    }
+
+    //更新用户密码
+    @PatchMapping("/updatePwd")
+    public Result updatePwd(@RequestBody Map<String,String> map){
+        //接收参数
+        String oldPwd = map.get("old_pwd");
+        String newPwd = map.get("new_pwd");
+        String rePwd = map.get("re_pwd");
+        //判断参数是否为空
+         if (!StringUtils.hasLength(oldPwd) ||!StringUtils.hasLength(newPwd) || !StringUtils.hasLength(rePwd) ){
+             return Result.error("参数不能为空！");
+         }
+        //判断原始密码是否正确
+        Map<String,Object> claims =ThreadLocalUtil.get(); //id,password
+        String username =claims.get("username").toString();
+        User user = userService.findByUsername(username);
+        if(!user.getPassword().equals(Md5Util.getMD5String(oldPwd)) ){
+            return Result.error("原始密码不一致");
+        }
+        //两次密码是否一致
+        if (!newPwd.equals(rePwd)){
+            return Result.error("两次密码不一致");
+        }
+        //修改密码
+        userService.updatePwd(newPwd);
         return Result.success();
     }
 }

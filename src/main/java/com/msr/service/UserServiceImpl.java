@@ -48,4 +48,15 @@ public class UserServiceImpl implements UserService{
         Integer id = Integer.parseInt(claims.get("id").toString());
         userMapper.updateAvatar(avatarUrl,id);
     }
+
+    //修改密码
+    @Override
+    public void updatePwd(String newPwd) {
+        //获取登录者的用户id
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        Integer id = Integer.parseInt(claims.get("id").toString());
+        //修改密码，对密码进行MD5加密
+        String md5Pwd =Md5Util.getMD5String(newPwd);
+        userMapper.updatePwd(md5Pwd,id);
+    }
 }
