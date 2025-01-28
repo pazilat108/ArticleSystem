@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msr.mapper.ArticleMapper">
+
+    <select id="listPage" resultType="com.msr.pojo.Article">
+        select * from article
+        <where>
+            <if test="categoryId!=null and categoryId!=''">
+                and category_Id =#{categoryId}
+            </if>
+            <if test="state!=null and state!=''">
+                and state =#{state}
+            </if>
+                and create_user=#{userId}
+        </where>
+    </select>
+</mapper>
