@@ -3,7 +3,6 @@ package com.msr.interceptors;
 import com.msr.utils.JwtUtil;
 import com.msr.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,9 +17,9 @@ import java.util.Map;
  * @desc
  */
 @Component
-public class LoginInterceptor implements HandlerInterceptor {
+public class LoginInterceptor<StringRedisTemplate> implements HandlerInterceptor {
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private org.springframework.data.redis.core.StringRedisTemplate stringRedisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //通过请求头获取令牌

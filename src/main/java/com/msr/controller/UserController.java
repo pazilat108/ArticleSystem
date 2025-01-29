@@ -67,6 +67,7 @@ public class UserController {
             //把token存储到redis中
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
             operations.set(token,token,1, TimeUnit.HOURS);
+
             return Result.success(token); //返回令牌到前端页面
         }
             //密码不正确，登录失败
